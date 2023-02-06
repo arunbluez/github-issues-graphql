@@ -1,15 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useInput } from "../hooks/useInput";
 import { useLazyQuery, gql } from "@apollo/client";
-import { SearchRepoQuery } from "../utils/gqlQueries";
+import { SEARCH_REPO } from "../graphql/queries.graphql";
+import { Repository } from "../graphql/__generated__/graphql";
 
 type Props = {};
 
-export default function SearchRepos({}: Props) {
-  const [getRepos, { loading, error, data }] = useLazyQuery(SearchRepoQuery);
-  const [searchRepoList, setSearchRepoList] = useState([]);
+type SearchRepoList = {
+  repoName: string;
+  repoUrl: string;
+  ownerImg: string;
+};
 
-  console.log(data, loading, error);
+export default function SearchRepos({}: Props) {
+  const [getRepos, { loading, error, data }] = useLazyQuery(SEARCH_REPO);
+  const [searchRepoList, setSearchRepoList] = useState<SearchRepoList[]>([]);
+  const [searchFocused, setSearchFocused] = useState(false);
+
   const {
     value: searchText,
     bind: bindSearchText,
@@ -17,14 +24,16 @@ export default function SearchRepos({}: Props) {
   } = useInput("");
 
   useMemo(() => {
-    if (data) {
-      // const searchList = data.search.nodes.map(x => {
-      //   return {
-      //     repoName: x.name,
-      //     ownerName: x.owner.name,
-      //     ownerImg: x.owner.avatarUrl
-      //   }
-      // })
+    if (data && data.search && data.search.nodes) {
+      const searchList = data.search.nodes as Repository[];
+      const formatedList = searchList.map((x) => {
+        return {
+          repoName: x.name,
+          repoUrl: x.url,
+          ownerImg: x.owner.avatarUrl,
+        };
+      });
+      setSearchRepoList(formatedList);
     }
   }, [data]);
 
@@ -48,14 +57,26 @@ export default function SearchRepos({}: Props) {
     </div>
   );
 
+  const SearchItem = ({ repoName, repoUrl, ownerImg }: SearchRepoList) => (
+    <div className="flex items-center justify-start gap-4 border-b border-gray-400 py-2 px-3">
+      <img src={ownerImg} alt="avatar" className="w-12 rounded-full" />
+      <div className="flex flex-1 flex-col items-start gap-1">
+        <div className="text-2xl text-black dark:text-white">{repoName}</div>
+        <div className="text-sm">{repoUrl.split("https://github.com/")[1]}</div>
+      </div>
+    </div>
+  );
+
   return (
     <div className={`${searchText.length > 2 && "dropdown dropdown-open"}`}>
       <input
         {...bindSearchText}
+        onFocus={() => setSearchFocused(true)}
+        onBlur={() => setSearchFocused(false)}
         placeholder="Search a Repository"
         className="input-bordered input w-full max-w-xs"
       />
-      {searchText.length > 2 && (
+      {searchText.length > 2 && loading && searchFocused && (
         <ul
           tabIndex={0}
           className="dropdown-content menu rounded-box w-52 bg-base-100 p-2 shadow"
@@ -68,6 +89,25 @@ export default function SearchRepos({}: Props) {
           </li>
         </ul>
       )}
+      {searchText.length > 2 &&
+        searchRepoList.length > 0 &&
+        !loading &&
+        searchFocused && (
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu rounded-box my-2 w-max max-w-max bg-base-100 p-2 shadow"
+          >
+            {searchRepoList.map((x, i) => (
+              <li key={i}>
+                <SearchItem
+                  repoName={x.repoName}
+                  repoUrl={x.repoUrl}
+                  ownerImg={x.ownerImg}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
     </div>
   );
 }

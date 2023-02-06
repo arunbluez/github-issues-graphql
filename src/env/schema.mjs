@@ -20,7 +20,7 @@ export const serverSchema = z.object({
   ),
   GITHUB_CLIENT_ID: z.string(),
   GITHUB_CLIENT_SECRET: z.string(),
-  //GITHUB_ACCESS_TOKEN: z.string(),
+  GITHUB_ACCESS_TOKEN: z.string(),
 });
 
 /**
@@ -30,6 +30,8 @@ export const serverSchema = z.object({
  */
 export const clientSchema = z.object({
   NEXT_PUBLIC_GITHUB_ACCESS_TOKEN: z.string(),
+  NEXT_PUBLIC_DEFAULT_OWNER: z.string(),
+  NEXT_PUBLIC_DEFAULT_REPO: z.string(),
 });
 
 /**
@@ -40,4 +42,6 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   NEXT_PUBLIC_GITHUB_ACCESS_TOKEN: process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKEN,
+  NEXT_PUBLIC_DEFAULT_OWNER: process.env.NEXT_PUBLIC_DEFAULT_OWNER,
+  NEXT_PUBLIC_DEFAULT_REPO: process.env.NEXT_PUBLIC_DEFAULT_REPO,
 };
