@@ -1,36 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useInput } from "../hooks/useInput";
 import { useLazyQuery, gql } from "@apollo/client";
+import { SearchRepoQuery } from "../utils/gqlQueries";
 
 type Props = {};
 
-const QUERY = gql`
-  query SearchRepoQuery($searchText: String!) {
-    search(query: $searchText, type: REPOSITORY, first: 5) {
-      nodes {
-        ... on Repository {
-          id
-          name
-          owner {
-            id
-            avatarUrl
-            ... on Organization {
-              id
-              name
-            }
-            ... on User {
-              name
-              id
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
 export default function SearchRepos({}: Props) {
-  const [getRepos, { loading, error, data }] = useLazyQuery(QUERY);
+  const [getRepos, { loading, error, data }] = useLazyQuery(SearchRepoQuery);
+  const [searchRepoList, setSearchRepoList] = useState([]);
 
   console.log(data, loading, error);
   const {
@@ -38,6 +15,18 @@ export default function SearchRepos({}: Props) {
     bind: bindSearchText,
     setValue: setSearchText,
   } = useInput("");
+
+  useMemo(() => {
+    if (data) {
+      // const searchList = data.search.nodes.map(x => {
+      //   return {
+      //     repoName: x.name,
+      //     ownerName: x.owner.name,
+      //     ownerImg: x.owner.avatarUrl
+      //   }
+      // })
+    }
+  }, [data]);
 
   useEffect(() => {
     if (searchText.length > 3) {
