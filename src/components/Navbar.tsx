@@ -29,30 +29,39 @@ export default function Navbar({}: Props) {
   }, [session]);
 
   return (
-    <div className="navbar items-center px-4">
-      <div className="flex-1 items-center">
-        <a className="mr-4 flex items-center gap-2 text-3xl normal-case">
-          <FaDumpsterFire size={60} className="text-secondary" />
-          <p className="flex flex-col items-start gap-0">
-            <span className="p-0">GitHub</span>
-            <span className="-mt-2 pl-1 text-lg">Issues Explorer</span>
-          </p>
-        </a>
+    <>
+      <div className="navbar items-center px-4">
+        <div className="flex-1 items-center">
+          <a className="mr-4 flex items-center gap-2 text-3xl normal-case">
+            <FaDumpsterFire size={60} className="text-secondary" />
+            <p className="flex flex-col items-start gap-0">
+              <span className="p-0">GitHub</span>
+              <span className="-mt-1 pl-1 text-sm md:-mt-2 md:text-lg">
+                Issues Explorer
+              </span>
+            </p>
+          </a>
+          <div className="hidden md:block">
+            <DynamicSearchRepos />
+          </div>
+        </div>
+        <div className="flex-none gap-4">
+          {!session ? (
+            <button onClick={() => sign()} className="btn-primary btn gap-2">
+              <FaGithubAlt size={24} />
+              {isSigningIn ? "Signing in..." : "Signin GitHub"}
+            </button>
+          ) : (
+            <AvatarGroup
+              img={session?.user?.image!}
+              name={session?.user?.name!}
+            />
+          )}
+        </div>
+      </div>
+      <div className="block w-full md:hidden">
         <DynamicSearchRepos />
       </div>
-      <div className="flex-none gap-4">
-        {!session ? (
-          <button onClick={() => sign()} className="btn-primary btn gap-2">
-            <FaGithubAlt size={24} />
-            {isSigningIn ? "Signing in..." : "Signin with GitHub"}
-          </button>
-        ) : (
-          <AvatarGroup
-            img={session?.user?.image!}
-            name={session?.user?.name!}
-          />
-        )}
-      </div>
-    </div>
+    </>
   );
 }

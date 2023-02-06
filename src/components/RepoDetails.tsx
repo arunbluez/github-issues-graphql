@@ -48,7 +48,7 @@ export default function RepoDetails({ data, owner }: Props) {
 
   return (
     <div>
-      <div className="stats shadow">
+      <div className="stats stats-vertical shadow lg:stats-horizontal">
         <div className="stat max-w-max">
           <div className="stat-value flex items-center justify-between">
             <p className="text-black dark:text-white">
@@ -80,7 +80,7 @@ export default function RepoDetails({ data, owner }: Props) {
             <FaStar size={32} />
           </div>
           <div className="stat-title">Stars</div>
-          <div className="stat-value text-5xl">
+          <div className="stat-value text-3xl lg:text-5xl">
             {formatNumber(repoDetails.repository?.stargazers.totalCount!)}
           </div>
         </div>
@@ -90,7 +90,7 @@ export default function RepoDetails({ data, owner }: Props) {
             <FaEye size={32} />
           </div>
           <div className="stat-title">Watchers</div>
-          <div className="stat-value text-5xl">
+          <div className="stat-value text-3xl lg:text-5xl">
             {formatNumber(repoDetails.repository?.watchers.totalCount!)}
           </div>
         </div>
@@ -100,7 +100,7 @@ export default function RepoDetails({ data, owner }: Props) {
             <FaDumpsterFire size={32} />
           </div>
           <div className="stat-title">Issues</div>
-          <div className="stat-value text-5xl">
+          <div className="stat-value text-3xl lg:text-5xl">
             {formatNumber(repoDetails.repository?.issues.totalCount!)}
           </div>
         </div>

@@ -76,7 +76,9 @@ export default function SearchRepos({}: Props) {
   );
 
   return (
-    <div className={`${searchText.length > 2 && "dropdown dropdown-open"}`}>
+    <div
+      className={`px-4 ${searchText.length > 2 && "dropdown dropdown-open"}`}
+    >
       <input
         {...bindSearchText}
         onFocus={() => setSearchFocused(true)}
@@ -86,7 +88,7 @@ export default function SearchRepos({}: Props) {
           }, 500);
         }}
         placeholder="Search a Repository"
-        className="input-bordered input mt-2 w-full max-w-xs"
+        className="input-bordered input mt-2 w-full md:mx-0 md:max-w-sm"
       />
       {searchText.length > 2 && loading && searchFocused && (
         <ul

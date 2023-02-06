@@ -11,7 +11,9 @@ export default function AvatarGroup({ img, name }: Props) {
   return (
     <div className="dropdown-end dropdown cursor-pointer">
       <div tabIndex={0} className="flex items-center gap-4">
-        <p className="text-3xl text-black dark:text-white">{name}</p>
+        <p className="text-2xl text-black dark:text-white md:text-3xl">
+          {name}
+        </p>
         <div className="avatar">
           <div className="w-8 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100">
             <img src={img} alt="avatar" />
