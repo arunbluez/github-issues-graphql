@@ -3,6 +3,7 @@ import { useInput } from "../hooks/useInput";
 import { useLazyQuery, gql } from "@apollo/client";
 import { SEARCH_REPO } from "../graphql/queries.graphql";
 import { Repository } from "../graphql/__generated__/graphql";
+import { useBoundStore } from "../stores/store";
 
 type Props = {};
 
@@ -16,6 +17,7 @@ export default function SearchRepos({}: Props) {
   const [getRepos, { loading, error, data }] = useLazyQuery(SEARCH_REPO);
   const [searchRepoList, setSearchRepoList] = useState<SearchRepoList[]>([]);
   const [searchFocused, setSearchFocused] = useState(false);
+  const setNames = useBoundStore((state) => state.setNames);
 
   const {
     value: searchText,
@@ -47,6 +49,12 @@ export default function SearchRepos({}: Props) {
     }
   }, [searchText]);
 
+  const getOwnerFromUrl = (url: string) => {
+    const ownerRepo = url.split("https://github.com/")[1];
+    const owner = ownerRepo?.split("/")[0];
+    return owner ? owner : "";
+  };
+
   const LoadingItem = () => (
     <div className="flex items-center justify-start gap-2 py-2 px-3">
       <div className="h-12 w-12 animate-pulse rounded-full bg-gray-500"></div>
@@ -72,9 +80,13 @@ export default function SearchRepos({}: Props) {
       <input
         {...bindSearchText}
         onFocus={() => setSearchFocused(true)}
-        onBlur={() => setSearchFocused(false)}
+        onBlur={() => {
+          setTimeout(() => {
+            setSearchFocused(false);
+          }, 500);
+        }}
         placeholder="Search a Repository"
-        className="input-bordered input w-full max-w-xs"
+        className="input-bordered input mt-2 w-full max-w-xs"
       />
       {searchText.length > 2 && loading && searchFocused && (
         <ul
@@ -98,7 +110,16 @@ export default function SearchRepos({}: Props) {
             className="dropdown-content menu rounded-box my-2 w-max max-w-max bg-base-100 p-2 shadow"
           >
             {searchRepoList.map((x, i) => (
-              <li key={i}>
+              <li
+                onClick={() => {
+                  setSearchText("");
+                  setNames({
+                    repoName: x.repoName,
+                    ownerName: getOwnerFromUrl(x.repoUrl),
+                  });
+                }}
+                key={i}
+              >
                 <SearchItem
                   repoName={x.repoName}
                   repoUrl={x.repoUrl}

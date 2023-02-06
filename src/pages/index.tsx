@@ -12,9 +12,10 @@ import { RepoDetailsQueryQuery } from "../graphql/__generated__/graphql";
 
 type PageProps = {
   data: RepoDetailsQueryQuery | null;
+  owner: string | null;
 };
 
-const Home: NextPage<PageProps> = ({ data }) => {
+const Home: NextPage<PageProps> = ({ data, owner }) => {
   return (
     <>
       <Head>
@@ -24,8 +25,8 @@ const Home: NextPage<PageProps> = ({ data }) => {
       </Head>
       <Layout>
         <Navbar />
-        <div className="container flex w-full flex-col items-center justify-center gap-12 px-4 py-16">
-          <RepoDetails data={data!} />
+        <div className="flex w-full flex-col items-center justify-center gap-12 px-4 py-4">
+          <RepoDetails data={data!} owner={owner!} />
           <h1 className="text-5xl font-extrabold text-white sm:text-[5rem]">
             Github Issues
           </h1>
@@ -54,12 +55,14 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     return {
       props: {
         data,
+        owner: clientEnv.NEXT_PUBLIC_DEFAULT_OWNER!,
       },
     };
   } else {
     return {
       props: {
         data: null,
+        owner: null,
       },
     };
   }
