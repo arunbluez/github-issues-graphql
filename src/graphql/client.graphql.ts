@@ -18,7 +18,13 @@ const cacheOptions = {
     IssueConnection: {
       keyFields: ["pageInfo", ["startCursor", "endCursor"]],
     },
+    IssueCommentConnection: {
+      keyFields: ["pageInfo", ["startCursor", "endCursor"]],
+    },
     Repository: {
+      keyFields: ["id"],
+    },
+    Issue: {
       keyFields: ["id"],
     },
   },

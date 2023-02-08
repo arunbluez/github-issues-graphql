@@ -30,7 +30,7 @@ export default function IssuesWrapper({ issueLabels, issuesList }: Props) {
           <IssuesSearch className="flex-1" />
         </div>
       </div>
-      <IssuesList issuesList={issuesList} />
+      <IssuesList issuesList={issuesList} issueLabels={issueLabels} />
     </div>
   );
 }

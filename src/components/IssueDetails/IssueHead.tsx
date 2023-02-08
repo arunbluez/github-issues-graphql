@@ -10,17 +10,19 @@ import TimeAgo from "react-timeago";
 type Props = {
   owner: string | string[];
   repo: string | string[];
+  author: User;
   issueDetails: IssueDetailsQuery;
 };
 
-export default function IssueHead({ owner, repo, issueDetails }: Props) {
-  const [author] = useState<User>(
-    issueDetails.repository?.issue?.author as User
-  );
-
+export default function IssueHead({
+  owner,
+  repo,
+  author,
+  issueDetails,
+}: Props) {
   console.log(author);
   return (
-    <div className="stats w-full py-4 px-2 shadow">
+    <div className="stats w-full bg-gray-700 py-4 px-2 shadow">
       <div className="stat">
         <p>
           {owner}/{repo}

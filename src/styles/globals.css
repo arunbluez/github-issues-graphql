@@ -5,3 +5,35 @@
 #nprogress .bar {
   @apply h-1 bg-[#5865F2] !important;
 }
+
+h1 {
+  @apply text-4xl font-bold text-white;
+}
+
+h2 {
+  @apply text-3xl font-bold;
+}
+
+p {
+  @apply py-1;
+}
+
+code {
+  @apply rounded-xl bg-gray-700 py-1 px-2;
+}
+
+pre {
+  @apply mockup-code m-2;
+}
+
+pre code {
+  @apply rounded-none bg-transparent p-0;
+}
+
+a {
+  @apply text-secondary underline;
+}
+
+.task-list-item-checkbox {
+  @apply checkbox-primary checkbox;
+}

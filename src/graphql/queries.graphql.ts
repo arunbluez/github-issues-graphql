@@ -54,6 +54,7 @@ query RepoDetailsQuery($repoName: String!, $ownerName: String!) {
 export const ISSUES_LABELS = gql(`
 query IssuesLabelsQuery($repoName: String!, $ownerName: String!, $labelCount: Int = 100) {
     repository(name: $repoName, owner: $ownerName) {
+        id
         labels(first: $labelCount) {
             totalCount
             nodes {
@@ -78,8 +79,12 @@ export const ISSUES_LIST = gql(`
               title
               number
               state
-              comments {
+              comments(first: 1) {
                 totalCount
+                pageInfo {
+                    startCursor
+                    endCursor
+                  }
               }
               createdAt
               closedAt
@@ -102,8 +107,13 @@ query SearchIssuesListQuery($searchString: String!, $afterCursor: String) {
               title
               number
               state
-              comments {
+              comments(first: 1) {
                 totalCount
+                pageInfo {
+                    startCursor
+                    endCursor
+                  }
+
               }
               createdAt
               closedAt
@@ -122,12 +132,17 @@ query IssueDetails($repoName: String!, $ownerName: String!, $issueNumber: Int!) 
         id
         title
         state
+        body
         bodyHTML
         createdAt
         updatedAt
         number
-        comments {
+        comments(first: 1) {
             totalCount
+            pageInfo {
+                startCursor
+                endCursor
+              }
         }
         author {
             ... on User {
@@ -139,3 +154,35 @@ query IssueDetails($repoName: String!, $ownerName: String!, $issueNumber: Int!) 
       }
     }
   }`);
+
+export const ISSUE_COMMENTS = gql(`
+query IssueCommentsQuery($repoName: String!, $ownerName: String!, $issueNumber: Int!, $afterCursor: String) {
+    repository(name: $repoName, owner: $ownerName) {
+    id
+    issue(number: $issueNumber) {
+      id
+      bodyHTML
+      createdAt
+      number
+      comments(first: 20, orderBy: {field: UPDATED_AT, direction: DESC}, after: $afterCursor) {
+        totalCount
+        pageInfo {
+          startCursor
+          endCursor
+        }
+        nodes {
+          author {
+            avatarUrl
+            ... on User {
+              id
+              name
+            }
+          }
+          bodyHTML
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  }
+}`);

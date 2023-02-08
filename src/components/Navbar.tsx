@@ -37,7 +37,7 @@ export default function Navbar({ showBack = false }: Props) {
         <div className="flex-1 items-center">
           <Link
             href={"/"}
-            className="mr-4 flex items-center gap-2 text-3xl normal-case"
+            className="mr-4 flex items-center gap-2 text-3xl normal-case text-white no-underline"
           >
             <FaDumpsterFire size={60} className="text-secondary" />
             <p className="flex flex-col items-start gap-0">
@@ -52,7 +52,7 @@ export default function Navbar({ showBack = false }: Props) {
               <DynamicSearchRepos />
             </div>
           ) : (
-            <Link href={"/"} className="btn hidden gap-2 md:block">
+            <Link href={"/"} className="btn hidden gap-2 md:flex">
               <FaLessThan /> Back
             </Link>
           )}

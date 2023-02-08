@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  IssuesLabelsQueryQuery,
   IssuesListQueryQuery,
   IssueState,
 } from "../../graphql/__generated__/graphql";
@@ -16,13 +17,14 @@ import Link from "next/link";
 
 type Props = {
   issuesList: IssuesListQueryQuery;
+  issueLabels: IssuesLabelsQueryQuery;
 };
 
 type LoadingProps = {
   id: number;
 };
 
-export default function IssuesList({ issuesList }: Props) {
+export default function IssuesList({ issueLabels }: Props) {
   const [issuesListState, setIssuesListState] =
     useState<IssuesListQueryQuery | null>(null);
 
@@ -88,7 +90,7 @@ export default function IssuesList({ issuesList }: Props) {
   };
 
   const LoadingItem = ({ id }: LoadingProps) => (
-    <tr key={id}>
+    <>
       <td className="">
         <div className="h-4 w-4 animate-pulse rounded-xl bg-gray-700"></div>
       </td>
@@ -99,7 +101,7 @@ export default function IssuesList({ issuesList }: Props) {
       <td className="">
         <div className="h-4 w-8 animate-pulse rounded-xl bg-gray-700"></div>
       </td>
-    </tr>
+    </>
   );
 
   return (
@@ -125,7 +127,7 @@ export default function IssuesList({ issuesList }: Props) {
           </div>
           <div className="flex items-center gap-2">
             <IssuesStateBtnGrp />
-            <IssuesLabels />
+            <IssuesLabels issueLabels={issueLabels} />
           </div>
         </div>
       </div>
@@ -141,7 +143,7 @@ export default function IssuesList({ issuesList }: Props) {
                     <td className="w-full bg-transparent">
                       <Link
                         href={`${ownerName}/${repoName}/issue/${x?.number}`}
-                        className="cursor-pointer truncate break-normal text-white md:text-xl"
+                        className="cursor-pointer truncate break-normal text-white no-underline md:text-xl"
                       >
                         {x?.title}
                       </Link>
@@ -168,9 +170,9 @@ export default function IssuesList({ issuesList }: Props) {
                   </tr>
                 ))
               : new Array(20).fill(1).map((x, i) => (
-                  <div key={i}>
+                  <tr key={i}>
                     <LoadingItem id={i} />
-                  </div>
+                  </tr>
                 ))}
           </tbody>
         </table>
