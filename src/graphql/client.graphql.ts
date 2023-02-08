@@ -13,6 +13,17 @@ const httpLink = createHttpLink({
   uri: "https://api.github.com/graphql",
 });
 
+const cacheOptions = {
+  typePolicies: {
+    IssueConnection: {
+      keyFields: ["pageInfo", ["startCursor", "endCursor"]],
+    },
+    Repository: {
+      keyFields: ["id"],
+    },
+  },
+};
+
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
   const token = clientEnv.NEXT_PUBLIC_GITHUB_ACCESS_TOKEN;
@@ -27,7 +38,7 @@ const authLink = setContext((_, { headers }) => {
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache(cacheOptions),
 });
 
 export const getGqlClient = (token: string) => {
@@ -45,7 +56,7 @@ export const getGqlClient = (token: string) => {
   } else {
     const client = new ApolloClient({
       link: authLink.concat(httpLink),
-      cache: new InMemoryCache(),
+      cache: new InMemoryCache(cacheOptions),
     });
     apolloClientCache = client;
     return apolloClientCache;

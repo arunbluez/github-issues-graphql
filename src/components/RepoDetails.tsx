@@ -24,8 +24,6 @@ export default function RepoDetails({ data, owner }: Props) {
   const [getReposDetailsQuery, { loading, error, data: newData }] =
     useLazyQuery(REPO_DETAILS);
 
-  console.log(loading, error, newData);
-
   useEffect(() => {
     console.log(repoName, ownerName);
     if (repoName !== repoDetails.repository?.name || ownerName !== owner) {

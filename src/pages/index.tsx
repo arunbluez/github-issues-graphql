@@ -6,16 +6,41 @@ import Layout from "../components/Layout";
 import Navbar from "../components/Navbar";
 import RepoDetails from "../components/RepoDetails";
 import { getGqlEdgeClient } from "../graphql/edgeClient.graphql";
-import { REPO_DETAILS } from "../graphql/queries.graphql";
+import {
+  ISSUES_LABELS,
+  ISSUES_LIST,
+  REPO_DETAILS,
+} from "../graphql/queries.graphql";
 import { clientEnv } from "../env/schema.mjs";
-import { RepoDetailsQueryQuery } from "../graphql/__generated__/graphql";
+import {
+  IssuesLabelsQueryQuery,
+  IssuesListQueryQuery,
+  IssueState,
+  RepoDetailsQueryQuery,
+} from "../graphql/__generated__/graphql";
+import IssuesWrapper from "../components/IssuesWrapper";
+import { useBoundStore } from "../stores/store";
+import { useEffect } from "react";
 
 type PageProps = {
-  data: RepoDetailsQueryQuery | null;
+  repoDetails: RepoDetailsQueryQuery | null;
+  issueLabels: IssuesLabelsQueryQuery | null;
+  issuesList: IssuesListQueryQuery | null;
   owner: string | null;
 };
 
-const Home: NextPage<PageProps> = ({ data, owner }) => {
+const Home: NextPage<PageProps> = ({
+  repoDetails,
+  issueLabels,
+  issuesList,
+  owner,
+}) => {
+  const setIssuesListStore = useBoundStore((state) => state.setIssuesListStore);
+
+  useEffect(() => {
+    setIssuesListStore(issuesList!);
+  }, [issuesList]);
+
   return (
     <>
       <Head>
@@ -25,11 +50,9 @@ const Home: NextPage<PageProps> = ({ data, owner }) => {
       </Head>
       <Layout>
         <Navbar />
-        <div className="flex w-full flex-col items-center justify-center gap-12 px-4 py-4">
-          <RepoDetails data={data!} owner={owner!} />
-          <h1 className="text-5xl font-extrabold text-white sm:text-[5rem]">
-            Github Issues
-          </h1>
+        <div className="flex h-full w-full flex-col items-center justify-center gap-4 overflow-auto px-4 py-4">
+          <RepoDetails data={repoDetails!} owner={owner!} />
+          <IssuesWrapper issueLabels={issueLabels!} issuesList={issuesList!} />
         </div>
       </Layout>
     </>
@@ -43,7 +66,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 ) => {
   const client = getGqlEdgeClient();
 
-  const { data, loading, error } = await client.query({
+  const repoDetails = await client.query({
     query: REPO_DETAILS,
     variables: {
       repoName: clientEnv.NEXT_PUBLIC_DEFAULT_REPO!,
@@ -51,17 +74,38 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     },
   });
 
-  if (!error) {
+  const issueLabels = await client.query({
+    query: ISSUES_LABELS,
+    variables: {
+      repoName: clientEnv.NEXT_PUBLIC_DEFAULT_REPO!,
+      ownerName: clientEnv.NEXT_PUBLIC_DEFAULT_OWNER!,
+    },
+  });
+
+  const issuesList = await client.query({
+    query: ISSUES_LIST,
+    variables: {
+      repoName: clientEnv.NEXT_PUBLIC_DEFAULT_REPO!,
+      ownerName: clientEnv.NEXT_PUBLIC_DEFAULT_OWNER!,
+      issueState: IssueState.Open,
+    },
+  });
+
+  if (!repoDetails.error || !issueLabels.error || !issuesList.error) {
     return {
       props: {
-        data,
+        repoDetails: repoDetails.data,
+        issueLabels: issueLabels.data,
+        issuesList: issuesList.data,
         owner: clientEnv.NEXT_PUBLIC_DEFAULT_OWNER!,
       },
     };
   } else {
     return {
       props: {
-        data: null,
+        repoDetails: null,
+        issueLabels: null,
+        issuesList: null,
         owner: null,
       },
     };
