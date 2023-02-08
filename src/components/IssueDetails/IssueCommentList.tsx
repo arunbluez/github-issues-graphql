@@ -38,18 +38,20 @@ export default function IssueCommentList({
       />
       {issueComments?.repository?.issue?.comments?.nodes &&
         issueComments?.repository?.issue?.comments?.nodes.map((x, i) => {
-          let issueComment = x as IssueComment;
-          let issueAuthor = x?.author as User;
+          const issueComment = x as IssueComment;
+          const issueAuthor = x?.author as User;
 
           return (
-            <IssueCommentItem
-              isLoading={isCommentParsing}
-              user={issueAuthor}
-              date={issueComment.updatedAt}
-              content={issueComment.bodyHTML}
-              isOriginalPoster={issueAuthor.id === mainAuthor.id}
-              isHtml
-            />
+            <div key={i}>
+              <IssueCommentItem
+                isLoading={isCommentParsing}
+                user={issueAuthor}
+                date={issueComment.updatedAt}
+                content={issueComment.bodyHTML}
+                isOriginalPoster={issueAuthor.id === mainAuthor.id}
+                isHtml
+              />
+            </div>
           );
         })}
     </div>
