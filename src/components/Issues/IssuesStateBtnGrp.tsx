@@ -3,9 +3,7 @@ import { IssueState } from "../../graphql/__generated__/graphql";
 import { useBoundStore } from "../../stores/store";
 import IssueStateIcon from "./IssueStateIcon";
 
-type Props = {};
-
-export default function IssuesStateBtnGrp({}: Props) {
+export default function IssuesStateBtnGrp({}) {
   const btnState = useBoundStore((state) => state.btnState);
   const setBtnState = useBoundStore((state) => state.setBtnState);
 

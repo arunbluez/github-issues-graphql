@@ -167,7 +167,11 @@ export default function IssuesList({ issuesList }: Props) {
                     </td>
                   </tr>
                 ))
-              : new Array(20).fill(1).map((x, i) => <LoadingItem id={i} />)}
+              : new Array(20).fill(1).map((x, i) => (
+                  <div key={i}>
+                    <LoadingItem id={i} />
+                  </div>
+                ))}
           </tbody>
         </table>
       </div>

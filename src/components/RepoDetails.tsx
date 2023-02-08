@@ -53,14 +53,22 @@ export default function RepoDetails({ data, owner }: Props) {
               {repoDetails.repository?.name}
             </p>
             <div className="flex gap-2 pl-4">
-              <a href={repoDetails.repository?.url} target="_blank">
+              <a
+                href={repoDetails.repository?.url}
+                target="_blank"
+                rel="noreferrer"
+              >
                 <FaGithubAlt
                   size={24}
                   className="cursor-pointer text-secondary hover:text-white"
                 />
               </a>
               {repoDetails.repository?.homepageUrl && (
-                <a href={repoDetails.repository?.homepageUrl} target="_blank">
+                <a
+                  href={repoDetails.repository?.homepageUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <FaGlobeAmericas
                     size={24}
                     className="cursor-pointer text-secondary hover:text-white"

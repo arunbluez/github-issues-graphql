@@ -1,9 +1,7 @@
 import React from "react";
 import IssueComment from "./IssueComment";
 
-type Props = {};
-
-export default function IssueCommentList({}: Props) {
+export default function IssueCommentList({}) {
   return (
     <div className="w-full">
       <IssueComment username="arunblues" date={new Date()} content={""} />

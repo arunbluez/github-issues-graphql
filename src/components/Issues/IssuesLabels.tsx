@@ -1,9 +1,7 @@
 import React from "react";
 import { FaCaretDown, FaTag } from "react-icons/fa";
 
-type Props = {};
-
-export default function IssuesLabels({}: Props) {
+export default function IssuesLabels({}) {
   return (
     <div className="dropdown">
       <label tabIndex={0} className="btn m-1 gap-2">

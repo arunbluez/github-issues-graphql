@@ -5,15 +5,13 @@ import { SEARCH_REPO } from "../graphql/queries.graphql";
 import { Repository } from "../graphql/__generated__/graphql";
 import { useBoundStore } from "../stores/store";
 
-type Props = {};
-
 type SearchRepoList = {
   repoName: string;
   repoUrl: string;
   ownerImg: string;
 };
 
-export default function SearchRepos({}: Props) {
+export default function SearchRepos({}) {
   const [getRepos, { loading, error, data }] = useLazyQuery(SEARCH_REPO);
   const [searchRepoList, setSearchRepoList] = useState<SearchRepoList[]>([]);
   const [searchFocused, setSearchFocused] = useState(false);
