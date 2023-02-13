@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import React from "react";
 import { IssueState } from "../../graphql/__generated__/graphql";
 import { useBoundStore } from "../../stores/store";
@@ -6,6 +7,7 @@ import IssueStateIcon from "./IssueStateIcon";
 export default function IssuesStateBtnGrp({}) {
   const btnState = useBoundStore((state) => state.btnState);
   const setBtnState = useBoundStore((state) => state.setBtnState);
+  const { data: session } = useSession();
 
   const isBtnActive = (state: IssueState) => {
     const classType =
@@ -18,6 +20,7 @@ export default function IssuesStateBtnGrp({}) {
   return (
     <div className="btn-group">
       <button
+        disabled={!session}
         onClick={() => setBtnState(IssueState.Open)}
         className={`btn gap-2 ${isBtnActive(IssueState.Open)}`}
       >
@@ -25,6 +28,7 @@ export default function IssuesStateBtnGrp({}) {
         <span>Open</span>
       </button>
       <button
+        disabled={!session}
         onClick={() => setBtnState(IssueState.Closed)}
         className={`btn gap-2 ${isBtnActive(IssueState.Closed)}`}
       >

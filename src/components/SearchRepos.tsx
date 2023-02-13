@@ -4,6 +4,7 @@ import { useLazyQuery, gql } from "@apollo/client";
 import { SEARCH_REPO } from "../graphql/queries.graphql";
 import { Repository } from "../graphql/__generated__/graphql";
 import { useBoundStore } from "../stores/store";
+import { useSession } from "next-auth/react";
 
 type SearchRepoList = {
   repoName: string;
@@ -13,6 +14,7 @@ type SearchRepoList = {
 
 export default function SearchRepos({}) {
   const [getRepos, { loading, error, data }] = useLazyQuery(SEARCH_REPO);
+  const { data: session } = useSession();
   const [searchRepoList, setSearchRepoList] = useState<SearchRepoList[]>([]);
   const [searchFocused, setSearchFocused] = useState(false);
   const setNames = useBoundStore((state) => state.setNames);
@@ -85,7 +87,8 @@ export default function SearchRepos({}) {
             setSearchFocused(false);
           }, 500);
         }}
-        placeholder="Search a Repository"
+        disabled={!session}
+        placeholder={!session ? "Login to Search" : "Search a Repository"}
         className="input-bordered input mt-2 w-full md:mx-0 md:max-w-sm"
       />
       {searchText.length > 2 && loading && searchFocused && (
